@@ -10,53 +10,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class LocalMemoryMealRepository {
+public class LocalMemoryMealRepository implements MealService {
 
-    private static final AtomicInteger index = new AtomicInteger(0);
-    private static final Map<Integer, Meal> localMealsMap = new ConcurrentHashMap<>();
+    private final AtomicInteger index = new AtomicInteger(0);
+    private final Map<Integer, Meal> localMealsMap = new ConcurrentHashMap<>();
 
     public LocalMemoryMealRepository() {
-        initialiseList();
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
+        add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
+        add(new Meal(LocalDateTime.of(2020, Month.FEBRUARY, 1, 14, 0), "Dinner", 410));
     }
 
-    private void initialiseList() {
-        localMealsMap.putAll(Stream.of(
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410),
-                new Meal(LocalMemoryMealRepository.getIndexKey(), LocalDateTime.of(2020, Month.FEBRUARY, 1, 14, 0), "Dinner", 410)
-        ).collect(Collectors.toMap(Meal::getId, Function.identity())));
-    }
-
-    public static int getIndexKey() {
-        return index.getAndIncrement();
-    }
-
+    @Override
     public List<Meal> getAll() {
         return new ArrayList<>(localMealsMap.values());
     }
 
-    public Meal getById(int index) {
-        return LocalMemoryMealRepository.localMealsMap.get(index);
+    @Override
+    public Meal getById(int id) {
+        return localMealsMap.get(id);
     }
 
+    @Override
     public Meal add(Meal meal) {
-        return LocalMemoryMealRepository.localMealsMap.put(meal.getId(), meal);
+        meal.setId(index.getAndIncrement());
+        return localMealsMap.put(meal.getId(), meal);
     }
 
+    @Override
+    public boolean delete(int id) {
+        return localMealsMap.remove(id) != null;
+    }
+
+    @Override
     public Meal update(Meal meal) {
-        return LocalMemoryMealRepository.localMealsMap.put(meal.getId(), meal);
-    }
-
-    public Meal delete(Meal meal) {
-        return LocalMemoryMealRepository.localMealsMap.remove(meal.getId());
+        return localMealsMap.put(meal.getId(), meal);
     }
 }

@@ -2,8 +2,8 @@ package ru.javawebinar.topjava.web;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.service.MealServiceImpl;
+import ru.javawebinar.topjava.repository.LocalMemoryMealRepository;
+import ru.javawebinar.topjava.repository.MealService;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -18,41 +18,41 @@ import java.util.List;
 
 public class MealServlet extends HttpServlet {
 
-    private final MealService service = new MealServiceImpl();
+    private final MealService service = new LocalMemoryMealRepository();
+    private static final int CALORIES_PER_DAY = 2000;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if (action != null && action.equalsIgnoreCase("edit")) {
+        if (action == null) {
+            List<MealTo> list = MealsUtil.filteredByStreams(service.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
+            req.setAttribute("list", list);
+            req.getRequestDispatcher("meals.jsp").forward(req, resp);
+        } else if (action.equalsIgnoreCase("edit")) {
             Meal meal = service.getById(Integer.parseInt(req.getParameter("id")));
             req.setAttribute("meal", meal);
             req.getRequestDispatcher("editMeal.jsp").forward(req, resp);
-        } else if (action != null && action.equalsIgnoreCase("delete")) {
-            Meal meal = service.getById(Integer.parseInt(req.getParameter("id")));
-            service.delete(meal);
+        } else if (action.equalsIgnoreCase("delete")) {
+            service.delete(Integer.parseInt(req.getParameter("id")));
             resp.sendRedirect("meals");
-        } else if (action != null && action.equalsIgnoreCase("add")) {
+        } else if (action.equalsIgnoreCase("add")) {
             req.getRequestDispatcher("editMeal.jsp").forward(req, resp);
-        } else {
-            List<MealTo> list = MealsUtil.filteredByStreams(service.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("meals.jsp").forward(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
-        LocalDateTime dateTime = LocalDateTime.of(LocalDate.parse(req.getParameter("date")), LocalTime.parse(req.getParameter("time")));
-        String description = req.getParameter("description");
-        int calories = Integer.parseInt(req.getParameter("calories"));
         String index = req.getParameter("id");
+        Meal meal = new Meal(LocalDateTime.of(LocalDate.parse(req.getParameter("date")), LocalTime.parse(req.getParameter("time"))),
+                req.getParameter("description"),
+                Integer.parseInt(req.getParameter("calories")));
 
         if (index != null && !index.isEmpty()) {
-            int id = Integer.parseInt(index);
-            service.update(id, dateTime, description, calories);
+            meal.setId(Integer.parseInt(index));
+            service.update(meal);
         } else {
-            service.add(dateTime, description, calories);
+            service.add(meal);
         }
         resp.sendRedirect("meals");
     }
