@@ -6,3 +6,5 @@ log
 *.patch
 
 
+/doc/02/
+/doc/01/
