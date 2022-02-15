@@ -38,16 +38,16 @@
             </tr>
             <tr>
                 <td><label>
-                    <input type="date" name="dateFrom" placeholder="date_from">
+                    <input type="date" name="dateFrom" placeholder="date_from" value="${param.dateFrom}">
                 </label></td>
                 <td><label>
-                    <input type="date" name="dateTo"  placeholder="date_to">
+                    <input type="date" name="dateTo"  placeholder="date_to" value="${param.dateTo}">
                 </label></td>
                 <td><label>
-                    <input type="time" name="timeFrom" placeholder="timeFrom">
+                    <input type="time" name="timeFrom" placeholder="timeFrom" value="${param.timeFrom}">
                 </label></td>
                 <td><label>
-                    <input type="time" name="timeTo"  placeholder="timeTo">
+                    <input type="time" name="timeTo"  placeholder="timeTo" value="${param.timeTo}">
                 </label></td>
             </tr>
             <tr>
