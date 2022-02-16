@@ -5,7 +5,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
@@ -39,7 +38,7 @@ public class MealService {
         checkNotFoundWithId(repository.save(userId, user), user.getId());
     }
 
-    public List<Meal> getFilter(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return  repository.getFilter(userId, startDate, endDate, startTime, endTime);
+    public List<Meal> getDateFilter(int userId, LocalDate startDate, LocalDate endDate) {
+        return repository.getDateFilter(userId, startDate, endDate);
     }
 }

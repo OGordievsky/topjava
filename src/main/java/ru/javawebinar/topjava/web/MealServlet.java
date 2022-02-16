@@ -47,7 +47,7 @@ public class MealServlet extends HttpServlet {
         if (meal.isNew()) {
             mealRestController.create(meal);
         } else {
-            mealRestController.update(meal);
+            mealRestController.update(meal, id);
         }
         response.sendRedirect("meals");
     }
@@ -95,10 +95,10 @@ public class MealServlet extends HttpServlet {
         String dateTo = request.getParameter("dateTo");
         String timeFrom = request.getParameter("timeFrom");
         String timeTo = request.getParameter("timeTo");
-        LocalDate minDateValue = dateFrom != null && !dateFrom.isEmpty() ? LocalDate.parse(dateFrom) : LocalDate.MIN;
-        LocalDate maxDateValue = dateTo != null && !dateTo.isEmpty() ? LocalDate.parse(dateTo) : LocalDate.MAX;
-        LocalTime minTimeValue = timeFrom != null && !timeFrom.isEmpty() ? LocalTime.parse(timeFrom) : LocalTime.MIN;
-        LocalTime maxTimeValue = timeTo != null && !timeTo.isEmpty() ? LocalTime.parse(timeTo) : LocalTime.MAX;
+        LocalDate minDateValue = dateFrom != null && !dateFrom.isEmpty() ? LocalDate.parse(dateFrom) : null;
+        LocalDate maxDateValue = dateTo != null && !dateTo.isEmpty() ? LocalDate.parse(dateTo) : null;
+        LocalTime minTimeValue = timeFrom != null && !timeFrom.isEmpty() ? LocalTime.parse(timeFrom) : null;
+        LocalTime maxTimeValue = timeTo != null && !timeTo.isEmpty() ? LocalTime.parse(timeTo) : null;
 
         return mealRestController.getFilter(minDateValue, maxDateValue, minTimeValue, maxTimeValue);
     }
