@@ -2,13 +2,20 @@ package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MealTestData {
+
+    public static final int USER_ID = 100000;
+    public static final int FOREIGN_ID = 99999;
 
     public static final Meal[] meals = {
             new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
@@ -41,6 +48,13 @@ public class MealTestData {
         return updated;
     }
 
+    public static List<Meal> getUserList(){
+        return Arrays.stream(meals)
+                .limit(8)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+    }
+
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).usingRecursiveComparison().ignoringFields("dateTime").isEqualTo(expected);
     }
@@ -53,4 +67,12 @@ public class MealTestData {
         assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields("dateTime").isEqualTo(expected);
     }
 
+    public static class DateLimit{
+        public static final LocalDate START_DATE = LocalDate.of(2020, Month.JANUARY, 30);
+        public static final LocalDate END_DATE = LocalDate.of(2020, Month.JANUARY, 31);
+        public static final List<Meal> LIMIT_LIST = Arrays.stream(meals)
+                .limit(7)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+    }
 }

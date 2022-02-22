@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-
-import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -26,8 +24,6 @@ import static ru.javawebinar.topjava.MealTestData.*;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 
 public class MealServiceTest {
-
-    private static final int USER_ID = 100000;
 
     static {
         SLF4JBridgeHandler.install();
@@ -54,17 +50,47 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenInclusive() {
+        assertMatch(service.getBetweenInclusive(DateLimit.START_DATE, DateLimit.END_DATE, USER_ID), DateLimit.LIMIT_LIST);
     }
 
     @Test
     public void getAll() {
+        assertMatch(service.getAll(USER_ID), getUserList());
     }
 
     @Test
     public void update() {
+        Meal meal = getUpdated();
+        service.update(meal, USER_ID);
+        assertMatch(service.get(meal.getId(), USER_ID), meal);
     }
 
     @Test
     public void create() {
+        Meal meal = getNew();
+        assertMatch(service.create(meal, USER_ID), meal);
+    }
+
+    @Test
+    public void createDuplicate() {
+        assertThrows(DataAccessException.class, () ->
+                service.create(new Meal(null, meals[5].getDateTime(), "duplicate dataTime", 1200), USER_ID));
+    }
+
+    @Test
+    public void deleteForeign() {
+        assertThrows(NotFoundException.class, () -> service.delete(9, FOREIGN_ID));
+    }
+
+    @Test
+    public void getForeign() {
+        assertThrows(NotFoundException.class, () -> service.get(1, FOREIGN_ID));
+    }
+
+    @Test
+    public void updateForeign() {
+        Meal meal = getUpdated();
+        service.update(meal, FOREIGN_ID);
+        assertThrows(NotFoundException.class, () -> service.get(12, USER_ID));
     }
 }
