@@ -26,12 +26,10 @@ CREATE TABLE user_roles
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-DROP SEQUENCE IF EXISTS meals_seq;
-CREATE SEQUENCE meals_seq START WITH 1;
 
 CREATE TABLE meals
 (
-    id              INTEGER PRIMARY KEY DEFAULT nextval('meals_seq'),
+    id              INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
     user_id         INTEGER NOT NULL,
     date_time       TIMESTAMP NOT NULL,
     description     VARCHAR,
