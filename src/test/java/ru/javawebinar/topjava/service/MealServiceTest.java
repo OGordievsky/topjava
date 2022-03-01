@@ -1,7 +1,12 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,9 +31,33 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static StringBuilder watchedLog = new StringBuilder();
+    private static long watchedTotalTime;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Autowired
     private MealService service;
+
+    @Rule
+    public final TestRule watchman = new TestWatcher() {
+        private long runTestTimer;
+        @Override
+        protected void starting(Description description) {
+            runTestTimer = System.currentTimeMillis();
+            watchedLog.append("\n");
+            super.starting(description);
+        }
+        @Override
+        protected void finished(Description description) {
+            long finishTestTime = System.currentTimeMillis() - runTestTimer;
+            String methodTimeDescription = "method name: " + description.getMethodName() + ", run time: " + finishTestTime + "ms";
+            watchedLog.append(methodTimeDescription);
+            watchedTotalTime += finishTestTime;
+            runTestTimer = 0;
+            LOGGER.info(methodTimeDescription);
+            super.finished(description);
+        }
+    };
 
     @Test
     public void delete() {
@@ -107,5 +136,11 @@ public class MealServiceTest {
     @Test
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
+    }
+
+    @AfterClass
+    public static void getTotalTimeDescription() {
+        LOGGER.info("\nFinal methods time result:" + watchedLog +
+                "\nTotal time: " + watchedTotalTime + "ms");
     }
 }
