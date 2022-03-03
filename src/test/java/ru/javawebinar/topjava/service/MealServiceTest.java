@@ -33,7 +33,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final StringBuilder watchedLog = new StringBuilder();
     private static long watchedTotalTime;
-    private static final Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Autowired
     private MealService service;
@@ -47,13 +47,13 @@ public class MealServiceTest {
             watchedLog.append('\n');
             watchedLog.append(methodTimeDescription);
             watchedTotalTime += nanos;
-            logger.info(methodTimeDescription);
+            log.info(methodTimeDescription);
         }
     };
 
     @AfterClass
     public static void getTotalTimeDescription() {
-        logger.info(watchedLog + "\nTotal time: " +
+        log.info(watchedLog + "\nTotal time: " +
                 TimeUnit.NANOSECONDS.toMillis(watchedTotalTime) + "ms");
     }
 
