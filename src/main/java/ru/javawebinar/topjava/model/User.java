@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
@@ -53,6 +54,9 @@ public class User extends AbstractNamedEntity {
     @Column(name = "calories_per_day", nullable = false, columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Meal> userMeals;
 
     public User() {
     }
@@ -121,6 +125,23 @@ public class User extends AbstractNamedEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Meal> getUserMeals() {
+        return userMeals.stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public void setUserMeals(List<Meal> meals) {
+        this.userMeals = meals;
+//        if (meals != null && !meals.isEmpty()){
+//            if (meals.get(0).getUser() != this){
+//                meals.forEach(meal -> meal.setUser(this));
+//            } else {
+//                this.userMeals = meals;
+//            }
+//        }
     }
 
     @Override

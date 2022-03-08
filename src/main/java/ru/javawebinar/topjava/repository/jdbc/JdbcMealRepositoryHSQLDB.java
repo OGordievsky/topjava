@@ -10,14 +10,15 @@ import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
-@Profile(Profiles.POSTGRES_DB)
-public class JdbcMealRepository extends AbstractMealRepository {
+@Profile(Profiles.HSQL_DB)
+public class JdbcMealRepositoryHSQLDB extends AbstractMealRepository {
 
     @Autowired
-    public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public JdbcMealRepositoryHSQLDB(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
     }
 
@@ -27,7 +28,7 @@ public class JdbcMealRepository extends AbstractMealRepository {
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", meal.getDateTime())
+                .addValue("date_time", meal.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -46,8 +47,10 @@ public class JdbcMealRepository extends AbstractMealRepository {
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, startDateTime, endDateTime);
+                ROW_MAPPER, userId, startDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                endDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 }
