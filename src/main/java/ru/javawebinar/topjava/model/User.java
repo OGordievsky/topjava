@@ -56,7 +56,7 @@ public class User extends AbstractNamedEntity {
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Meal> userMeals;
+    private List<Meal> meals;
 
     public User() {
     }
@@ -127,21 +127,12 @@ public class User extends AbstractNamedEntity {
         return password;
     }
 
-    public List<Meal> getUserMeals() {
-        return userMeals.stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+    public List<Meal> getMeals() {
+        return meals;
     }
 
-    public void setUserMeals(List<Meal> meals) {
-        this.userMeals = meals;
-//        if (meals != null && !meals.isEmpty()){
-//            if (meals.get(0).getUser() != this){
-//                meals.forEach(meal -> meal.setUser(this));
-//            } else {
-//                this.userMeals = meals;
-//            }
-//        }
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
     }
 
     @Override

@@ -25,7 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractServiceTest {
-    private static final Logger log = getLogger("result");//
+    private static final Logger log = getLogger("result");
     private static final StringBuilder results = new StringBuilder();
 
     @Rule
@@ -46,19 +46,6 @@ public abstract class AbstractServiceTest {
                 "\n---------------------------------" +
                 results +
                 "\n---------------------------------");
+        results.setLength(0);
     }
-
-    public abstract void delete();
-
-    public abstract void deleteNotFound();
-
-    public abstract void get();
-
-    public abstract void getNotFound();
-
-    public abstract void create();
-
-    public abstract void update();
-
-    public abstract void getAll();
 }
