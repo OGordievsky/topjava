@@ -19,7 +19,8 @@ public class HsqldbJdbcMealRepository extends AbstractJdbcMealRepository {
         super(jdbcTemplate, namedParameterJdbcTemplate);
     }
 
-    protected Timestamp castDateTime(LocalDateTime localDateTime){
+    @Override
+    protected Timestamp castDateTime(LocalDateTime localDateTime) {
         return Timestamp.valueOf(localDateTime);
     }
 }

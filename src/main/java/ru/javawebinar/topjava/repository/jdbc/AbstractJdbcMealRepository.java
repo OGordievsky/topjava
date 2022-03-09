@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -17,10 +16,10 @@ import java.util.List;
 
 
 public abstract class AbstractJdbcMealRepository implements MealRepository {
-    protected static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
-    protected final JdbcTemplate jdbcTemplate;
-    protected final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    protected final SimpleJdbcInsert insertMeal;
+    private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final SimpleJdbcInsert insertMeal;
 
     public AbstractJdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
@@ -81,7 +80,7 @@ public abstract class AbstractJdbcMealRepository implements MealRepository {
     }
 
     @Override
-    public User getUser(int userId) {
+    public Meal getWithUser(int id, int userid) {
         return null;
     }
 

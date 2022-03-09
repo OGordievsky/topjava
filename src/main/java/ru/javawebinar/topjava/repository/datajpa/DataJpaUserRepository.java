@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
@@ -13,11 +12,9 @@ public class DataJpaUserRepository implements UserRepository {
     private static final Sort SORT_NAME_EMAIL = Sort.by(Sort.Direction.ASC, "name", "email");
 
     private final CrudUserRepository userRepository;
-    private final CrudMealRepository mealRepository;
 
-    public DataJpaUserRepository(CrudUserRepository userRepository, CrudMealRepository mealRepository) {
+    public DataJpaUserRepository(CrudUserRepository userRepository) {
         this.userRepository = userRepository;
-        this.mealRepository = mealRepository;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class DataJpaUserRepository implements UserRepository {
     }
 
     @Override
-    public List<Meal> getMeals(int id) {
-        return mealRepository.findAll(id);
+    public User getWithMeals(int id) {
+        return userRepository.getWithMeals(id);
     }
 }

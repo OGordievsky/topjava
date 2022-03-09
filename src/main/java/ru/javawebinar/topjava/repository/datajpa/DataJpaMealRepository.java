@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -55,7 +54,7 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
-    public User getUser(int user_id) {
-        return userRepository.findById(user_id).orElse(null);
+    public Meal getWithUser(int id, int userid) {
+        return mealRepository.getWithUser(id, userid);
     }
 }

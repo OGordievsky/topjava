@@ -63,7 +63,7 @@ public class JpaMealRepository implements MealRepository {
     }
 
     @Override
-    public User getUser(int userId) {
+    public Meal getWithUser(int id, int userid) {
         return null;
     }
 }

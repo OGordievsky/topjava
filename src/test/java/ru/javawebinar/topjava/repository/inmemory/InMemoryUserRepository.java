@@ -32,9 +32,10 @@ public class InMemoryUserRepository extends InMemoryBaseRepository<User> impleme
     }
 
     @Override
-    public List<Meal> getMeals(int id) {
+    public User getWithMeals(int id) {
         return null;
     }
+
 
     @Override
     public User getByEmail(String email) {
