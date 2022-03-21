@@ -67,6 +67,9 @@
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
 
+        <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        </bean>
+
         <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <constructor-arg ref="dataSource"/>
         </bean>

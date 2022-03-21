@@ -9,6 +9,8 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @Transactional(readOnly = true)
@@ -59,9 +61,10 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        List<User> users = em.createNamedQuery(User.BY_EMAIL, User.class)
+        Set<User> users = em.createNamedQuery(User.BY_EMAIL, User.class)
                 .setParameter(1, email)
-                .getResultList();
+                .getResultStream()
+                .collect(Collectors.toSet());
         return DataAccessUtils.singleResult(users);
     }
 
