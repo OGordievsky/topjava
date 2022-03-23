@@ -27,6 +27,10 @@ public class UserTestData {
         return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
     }
 
+    public static User getNewWithoutRoles() {
+        return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), null);
+    }
+
     public static User getUpdated() {
         User updated = new User(user);
         updated.setEmail("update@gmail.com");
@@ -35,6 +39,38 @@ public class UserTestData {
         updated.setPassword("newPass");
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
+        return updated;
+    }
+
+    public static User getUpdatedExcludeRole() {
+        User updated = new User(user);
+        updated.setEmail("update@gmail.com");
+        updated.setName("UpdatedName");
+        updated.setCaloriesPerDay(330);
+        updated.setPassword("newPass");
+        updated.setEnabled(false);
+        return updated;
+    }
+
+    public static User getAdminNoRoles() {
+        User updated = new User(user);
+        updated.setEmail("update@gmail.com");
+        updated.setName("UpdatedName");
+        updated.setCaloriesPerDay(330);
+        updated.setPassword("newPass");
+        updated.setEnabled(false);
+        updated.setRoles(null);
+        return updated;
+    }
+
+    public static User getAdminOnlyUserRole() {
+        User updated = new User(user);
+        updated.setEmail("update@gmail.com");
+        updated.setName("UpdatedName");
+        updated.setCaloriesPerDay(330);
+        updated.setPassword("newPass");
+        updated.setEnabled(false);
+        updated.setRoles(Collections.singletonList(Role.USER));
         return updated;
     }
 }

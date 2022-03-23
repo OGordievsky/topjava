@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -19,6 +20,7 @@ import java.util.Set;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
 
+@ActiveProfiles("test")
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
@@ -36,7 +38,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Before
     public void setup() {
         cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
     }
 
     @Test
@@ -44,6 +45,16 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User created = service.create(getNew());
         int newId = created.id();
         User newUser = getNew();
+        newUser.setId(newId);
+        USER_MATCHER.assertMatch(created, newUser);
+        USER_MATCHER.assertMatch(service.get(newId), newUser);
+    }
+
+    @Test
+    public void createNoRoles() {
+        User created = service.create(getNewWithoutRoles());
+        int newId = created.id();
+        User newUser = getNewWithoutRoles();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(service.get(newId), newUser);
@@ -88,6 +99,27 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+    }
+
+    @Test
+    public void updateWithoutRole() {
+        User updated = getUpdatedExcludeRole();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdatedExcludeRole());
+    }
+
+    @Test
+    public void updateRemoveAllRoles() {
+        User updated = getAdminNoRoles();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(USER_ID),getAdminNoRoles());
+    }
+
+    @Test
+    public void updateRemoveRole() {
+        User updated = getAdminOnlyUserRole();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(USER_ID), getAdminOnlyUserRole());
     }
 
     @Test

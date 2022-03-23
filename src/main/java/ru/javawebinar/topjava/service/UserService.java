@@ -36,7 +36,6 @@ public class UserService {
     }
 
     public User get(int id) {
-        User user = repository.get(id);
         return checkNotFoundWithId(repository.get(id), id);
     }
 
@@ -58,20 +57,5 @@ public class UserService {
 
     public User getWithMeals(int id) {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
-    }
-
-    public boolean addRoles(int id, Role... roles) {
-        Assert.notNull(roles, "roles must not be null");
-        Assert.notEmpty(roles, "roles must not be empty");
-        User user = get(id);
-        Set<Role> uRoles = user.getRoles();
-        return repository.addRoles(id, Arrays.stream(roles).filter(r -> !uRoles.contains(r)).toArray(Role[]::new));
-    }
-
-    public boolean removeRoles(int id, Role... roles) {
-        Assert.notNull(roles, "roles must not be null");
-        Assert.notEmpty(roles, "roles must not be empty");
-        Set<Role> uRoles = get(id).getRoles();
-        return repository.removeRoles(id, Arrays.stream(roles).filter(uRoles::contains).toArray(Role[]::new));
     }
 }

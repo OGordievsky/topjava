@@ -16,6 +16,12 @@ import static ru.javawebinar.topjava.UserTestData.USER_MATCHER;
 
 @ActiveProfiles(DATAJPA)
 public class DataJpaUserServiceTest extends AbstractUserServiceTest {
+    @Override
+    public void setup() {
+        super.setup();
+        jpaUtil.clear2ndLevelHibernateCache();
+    }
+
     @Test
     public void getWithMeals() {
         User user = service.getWithMeals(USER_ID);

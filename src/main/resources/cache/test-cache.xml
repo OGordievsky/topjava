@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+        <property name="cacheManager" value="org.springframework.cache.support.NoOpCacheManager">
+            <!--            <bean class="org.springframework.cache.support.NoOpCacheManager"/>-->
+<!--            <bean class="org.springframework.cache.jcache.JCacheManagerFactoryBean" p:cacheManagerUri="classpath:cache/ehcache.xml"/>-->
+        </property>
+
+
+<!--    <bean id="cacheManager" class="org.springframework.cache.support.NoOpCacheManager"/>-->

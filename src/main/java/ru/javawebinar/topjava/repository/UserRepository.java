@@ -23,12 +23,4 @@ public interface UserRepository {
     default User getWithMeals(int id) {
         throw new UnsupportedOperationException();
     }
-
-    default boolean addRoles(int id, Role... roles) {
-        throw new UnsupportedOperationException();
-    }
-
-    default boolean removeRoles(int id, Role... roles){
-        throw new UnsupportedOperationException();
-    }
 }

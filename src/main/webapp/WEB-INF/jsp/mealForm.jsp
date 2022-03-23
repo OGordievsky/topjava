@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
@@ -10,7 +9,7 @@
 <br>
 <section>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <% if (meal.getId() == null) { %> <h2><spring:message code="meal.add_new_meal"/></h2><% } else { %> <h2><spring:message code="meal.edit_meal"/></h2><% } %>
+    <h2><spring:message code="${meal.id == null ? 'meal.add_new' : 'meal.edit'}"/></h2>
     <hr/>
     <form method="post" action="/topjava/meals">
         <input type="hidden" name="id" value="${meal.id}">
