@@ -10,7 +10,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class MealRestController extends AbstractMealController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> createNew (@RequestBody Meal meal){
+    public ResponseEntity<Meal> createNew(@RequestBody Meal meal) {
         Meal created = super.create(meal);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -54,8 +55,10 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/filter")
-    public List<MealTo> getBetweenParams(@RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-                                         @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
-        return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
+    public List<MealTo> getBetweenParams(@RequestParam(value = "startDate", required = false) @DateTimeFormat LocalDate startDate,
+                                         @RequestParam(value = "startTime", required = false) @DateTimeFormat LocalTime startTime,
+                                         @RequestParam(value = "endDate", required = false) @DateTimeFormat LocalDate endDate,
+                                         @RequestParam(value = "endTime", required = false) @DateTimeFormat LocalTime endTime) {
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
