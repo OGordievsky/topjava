@@ -1,15 +1,19 @@
 package ru.javawebinar.topjava;
 
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals");
+    public static final MatcherFactory.Matcher<User> USER_WITH_MEALS_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered");
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
@@ -33,5 +37,36 @@ public class UserTestData {
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
+    }
+
+    public static User getUserWithMeals() {
+        return new User(user) {
+            private User returnThis() {
+                try {
+                    Field field = this.getClass().getSuperclass().getDeclaredField("meals");
+                    field.setAccessible(true);
+                    field.set(this, MealTestData.meals);
+                    field.setAccessible(false);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                return this;
+            }
+        }.returnThis();
+    }
+    public static User getAdminWithMeals() {
+        return new User(admin) {
+            private User returnThis() {
+                try {
+                    Field field = this.getClass().getSuperclass().getDeclaredField("meals");
+                    field.setAccessible(true);
+                    field.set(this, MealTestData.adminMeals);
+                    field.setAccessible(false);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                return this;
+            }
+        }.returnThis();
     }
 }
